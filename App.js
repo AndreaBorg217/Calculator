@@ -8,24 +8,41 @@
  */
 
 import React from 'react';
-import {StyleSheet, View, FlatList, TouchableOpacity, Text} from 'react-native';
+import {StyleSheet, View, FlatList, TouchableOpacity, Text, Image} from 'react-native';
 
 const numbers = ['7','8','9','4','5','6','1','2','3'] 
-const operators = ['./assets/divide.png', './assets/multiply.png', './assets/minus.png', './assets/plus.png']
+const operators = [require('./assets/divide.png'), require('./assets/multiply.png'), require('./assets/minus.png'), require('./assets/plus.png')]
 //AC, backspace, =
 
 const App = () => {
   const NumButton = ({number}) =>{
     return(
-      <TouchableOpacity style = {styles.NumButton}>
+      <TouchableOpacity style = {[styles.NumButton, {backgroundColor: '#49994B'}]}>
         <Text style = {styles.number}>{number}</Text>
       </TouchableOpacity>
     );
   }
 
+  const OperatorButton = ({image}) =>{
+    return(
+      <TouchableOpacity style = {[styles.NumButton, {backgroundColor: '#007B68'}]}>
+        <Image style={styles.operator} source={image}/>
+      </TouchableOpacity>
+    );
+  }
   return (
     <View style={styles.container}>
-    
+
+    <View style = {styles.controlButtons}>
+      <TouchableOpacity style = {styles.controlButton}>
+        <Text style = {styles.number}>AC</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity style = {styles.controlButton}>
+        <Image style={styles.operator} source={require('./assets/backspace.png')}/>
+      </TouchableOpacity>
+    </View>
+
     <View style = {styles.numpad}>
       <FlatList
         data={numbers}
@@ -41,6 +58,17 @@ const App = () => {
         <NumButton number = {'.'}/>
       </View>
     </View>
+
+      <View style = {styles.operatorKeys}>
+        <FlatList
+          data={operators}
+          renderItem = {({item}) => <OperatorButton image = {item}/>}
+          keyExtractor={(item, index) => index}
+        />
+        <TouchableOpacity style = {[styles.NumButton, {backgroundColor: '#007B68'}]}>
+          <Image style={styles.operator} source={require('./assets/equals.png')}/>
+        </TouchableOpacity>
+      </View>
 
     </View>
   );
@@ -58,7 +86,6 @@ const styles = StyleSheet.create({
   NumButton:{
     width: 80,
     height: 80,
-    backgroundColor: '#49994B',
     borderRadius: 80/2,
     alignItems: 'center',
     justifyContent: 'center',
@@ -86,6 +113,27 @@ const styles = StyleSheet.create({
   numpad:{
     position: 'absolute',
     transform: [{translateY: 140}, {translateX: -40}]
+  },
+  operator:{
+    width: 32,
+    height: 32,
+  },
+  operatorKeys:{
+    position: 'absolute',
+    transform: [{translateY: 98}, {translateX: 140}]
+  },
+  controlButton: {
+    width: 130,
+    height: 80,
+    borderRadius: 80/2,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#00626D',
+  },
+  controlButtons:{
+    position: 'absolute',
+    flexDirection: 'row',
+    transform: [{translateY: -85}, {translateX: -40}]
   }
 });
 
