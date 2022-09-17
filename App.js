@@ -32,6 +32,18 @@ const App = () => {
   }
   return (
     <View style={styles.container}>
+      
+    <View style = {styles.screen}>
+
+      <View style = {styles.inputContainer}>
+        <Text style = {styles.input}>10+2+3+4+5+6+7+8+9+0</Text>
+      </View>
+      
+      <View style = {styles.outputContainer}>
+        <Text style = {styles.output}>10000</Text>
+      </View>
+     
+    </View>
 
     <View style = {styles.controlButtons}>
       <TouchableOpacity style = {styles.controlButton}>
@@ -134,6 +146,39 @@ const styles = StyleSheet.create({
     position: 'absolute',
     flexDirection: 'row',
     transform: [{translateY: -85}, {translateX: -40}]
+  },
+  screen:{
+    width: 340,
+    height: 160,
+    backgroundColor: '#f8f8ff',
+    position: 'absolute',
+    transform: [{translateY: -240}],
+    borderRadius: 10,
+    borderColor: '#d4d4d4',
+    borderWidth: 5
+  }, 
+  inputContainer:{
+    width: 340,
+    height: 160,
+    margin: 15,
+    position: 'absolute',
+    alignItems: 'flex-start',
+    justifyContent: 'flex-start',
+  },
+  outputContainer:{
+    width: 340,
+    height: 160,
+    margin: -15,
+    position: 'absolute',
+    alignItems: 'flex-end',
+    justifyContent: 'flex-end',
+  },
+  input:{
+    fontSize: 26,
+    textAlign: 'left',
+  }, 
+  output:{
+    fontSize: 34,
   }
 });
 
