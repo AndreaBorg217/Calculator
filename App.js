@@ -11,7 +11,12 @@ import React from 'react';
 import {StyleSheet, View, FlatList, TouchableOpacity, Text, Image} from 'react-native';
 
 const numbers = ['7','8','9','4','5','6','1','2','3'] 
-const operators = [require('./assets/divide.png'), require('./assets/multiply.png'), require('./assets/minus.png'), require('./assets/plus.png')]
+const operators = [
+  {operator: ' / ', image: require('./assets/divide.png')}, 
+  {operator: ' x ', image: require('./assets/multiply.png')}, 
+  {operator: ' + ', image: require('./assets/minus.png')},
+  {operator: ' + ', image: require('./assets/plus.png')}
+]
 //AC, backspace, =
 
 const App = () => {
@@ -23,7 +28,7 @@ const App = () => {
     );
   }
 
-  const OperatorButton = ({image}) =>{
+  const OperatorButton = ({image, operator}) =>{
     return(
       <TouchableOpacity style = {[styles.NumButton, {backgroundColor: '#007B68'}]}>
         <Image style={styles.operator} source={image}/>
@@ -74,7 +79,7 @@ const App = () => {
       <View style = {styles.operatorKeys}>
         <FlatList
           data={operators}
-          renderItem = {({item}) => <OperatorButton image = {item}/>}
+          renderItem = {({item}) => <OperatorButton image = {item.image} operator = {item.operator}/>}
           keyExtractor={(item, index) => index}
         />
         <TouchableOpacity style = {[styles.NumButton, {backgroundColor: '#007B68'}]}>
