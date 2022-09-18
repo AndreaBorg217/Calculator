@@ -12,17 +12,18 @@ import {StyleSheet, View, FlatList, TouchableOpacity, Text, Image} from 'react-n
 
 const numbers = ['7','8','9','4','5','6','1','2','3'] 
 const operators = [
-  {placeholder: ' ÷ ', operator: '/', image: require('./assets/divide.png')}, 
-  {placeholder: ' x ', operator: '*', image: require('./assets/multiply.png')}, 
-  {placeholder: ' - ', operator: '-', image: require('./assets/minus.png')},
-  {placeholder: ' + ', operator: '+', image: require('./assets/plus.png')}
+  {placeholder: '÷', operator: '/', image: require('./assets/divide.png')}, 
+  {placeholder: '×', operator: '*', image: require('./assets/multiply.png')}, 
+  {placeholder: '-', operator: '-', image: require('./assets/minus.png')},
+  {placeholder: '+', operator: '+', image: require('./assets/plus.png')}
 ]
 //AC, backspace, =
 
 const App = () => {
   const [input, setInput] = useState('')
   const [toEval, setEval] = useState('')
-  const [output, setOutput] = useState(0)
+  const [output, setOutput] = useState('')
+  const [equalPressed, setEqualPressed] = useState(false)
 
   useEffect(() => {
     if(!isNaN(parseFloat(toEval[toEval.length-1]))){
@@ -31,12 +32,22 @@ const App = () => {
     else if(toEval == ''){
       setOutput(0)
     }
-  }, [toEval])
+
+    if(input.length == 18){ 
+      setInput(prev => prev.concat('\n'))
+    }
+    
+    if(input[0] == '÷' || input[0] == '×' || input[0] == '-' || input[0] == '+'){
+      setInput(prev => '0'.concat(prev))
+      setEval(prev => '0'.concat(prev))
+    }
+  }, [toEval, input])
   
 
   const handlePress = (pressed, placeholder) =>{
     setInput(prev => prev.concat(placeholder))
     setEval(prev => prev.concat(pressed))
+    setEqualPressed(false)
   }
 
   const NumButton = ({number}) =>{
@@ -62,21 +73,21 @@ const App = () => {
     <View style = {styles.screen}>
 
       <View style = {styles.inputContainer}>
-        <Text style = {styles.input}>{input}</Text>
+        <Text style = {equalPressed ? styles.inputEquals : styles.input}>{input}</Text>
       </View>
       
       <View style = {styles.outputContainer}>
-        <Text style = {styles.output}>{output}</Text>
+        <Text style = {equalPressed ? styles.outputEquals : styles.output}>= {output}</Text>
       </View>
      
     </View>
 
     <View style = {styles.controlButtons}>
-      <TouchableOpacity style = {styles.controlButton} onPress = {() => {setInput(''); setEval('')}}>
+      <TouchableOpacity style = {styles.controlButton} onPress = {() => {setInput(''); setEval(''); setEqualPressed(false);}}>
         <Text style = {styles.number}>AC</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity style = {styles.controlButton} onPress = {() => {setInput(prev => prev.slice(0, prev.length-1)); setEval(prev =>  prev.slice(0, prev.length-1))}}>
+      <TouchableOpacity style = {styles.controlButton} onPress = {() => {setInput(prev => prev.slice(0, prev.length-1)); setEval(prev =>  prev.slice(0, prev.length-1)); setEqualPressed(false);}}>
         <Image style={styles.operator} source={require('./assets/backspace.png')}/>
       </TouchableOpacity>
     </View>
@@ -103,7 +114,7 @@ const App = () => {
           renderItem = {({item}) => <OperatorButton image = {item.image} operator = {item.operator} placeholder = {item.placeholder}/>}
           keyExtractor={(item, index) => index}
         />
-        <TouchableOpacity style = {[styles.NumButton, {backgroundColor: '#007B68'}]}>
+        <TouchableOpacity style = {[styles.NumButton, {backgroundColor: '#007B68'}]} onPress = {() => setEqualPressed(true)}>
           <Image style={styles.operator} source={require('./assets/equals.png')}/>
         </TouchableOpacity>
       </View>
@@ -200,11 +211,22 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
   },
   input:{
-    fontSize: 26,
-    textAlign: 'left',
+    fontSize: 30,
+    flex: 1, 
+    flexWrap: 'wrap',
+    color: 'black'
   }, 
   output:{
-    fontSize: 34,
+    fontSize: 26,
+    paddingRight: 5
+  },
+  inputEquals:{
+    fontSize: 26,
+  },
+  outputEquals:{
+    fontSize: 30,
+    color: 'black',
+    paddingRight: 5,
   }
 });
 
