@@ -27,7 +27,7 @@ const App = () => {
 
   useEffect(() => {
     if(!isNaN(parseFloat(toEval[toEval.length-1]))){
-      setOutput(eval(toEval))
+      setOutput('= '.concat(eval(toEval)))
     }
     else if(toEval == ''){
       setOutput(0)
@@ -77,7 +77,7 @@ const App = () => {
       </View>
       
       <View style = {styles.outputContainer}>
-        <Text style = {equalPressed ? styles.outputEquals : styles.output}>= {output}</Text>
+        <Text style = {equalPressed ? styles.outputEquals : styles.output}>{output}</Text>
       </View>
      
     </View>
