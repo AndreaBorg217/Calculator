@@ -7,55 +7,76 @@
  * @flow strict-local
  */
 
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import {StyleSheet, View, FlatList, TouchableOpacity, Text, Image} from 'react-native';
 
 const numbers = ['7','8','9','4','5','6','1','2','3'] 
 const operators = [
-  {operator: ' / ', image: require('./assets/divide.png')}, 
-  {operator: ' x ', image: require('./assets/multiply.png')}, 
-  {operator: ' + ', image: require('./assets/minus.png')},
-  {operator: ' + ', image: require('./assets/plus.png')}
+  {placeholder: ' ÷ ', operator: '/', image: require('./assets/divide.png')}, 
+  {placeholder: ' x ', operator: '*', image: require('./assets/multiply.png')}, 
+  {placeholder: ' - ', operator: '-', image: require('./assets/minus.png')},
+  {placeholder: ' + ', operator: '+', image: require('./assets/plus.png')}
 ]
 //AC, backspace, =
 
 const App = () => {
+  const [input, setInput] = useState('')
+  const [toEval, setEval] = useState('')
+  const [output, setOutput] = useState(0)
+
+  useEffect(() => {
+    if(!isNaN(parseFloat(toEval[toEval.length-1]))){
+      setOutput(eval(toEval))
+    }
+    else if(toEval == ''){
+      setOutput(0)
+    }
+  }, [toEval])
+  
+
+  const handlePress = (pressed, placeholder) =>{
+    setInput(prev => prev.concat(placeholder))
+    setEval(prev => prev.concat(pressed))
+  }
+
   const NumButton = ({number}) =>{
     return(
-      <TouchableOpacity style = {[styles.NumButton, {backgroundColor: '#49994B'}]}>
+      <TouchableOpacity style = {[styles.NumButton, {backgroundColor: '#49994B'}]} onPress = {() => handlePress(number, number)}>
         <Text style = {styles.number}>{number}</Text>
       </TouchableOpacity>
     );
   }
 
-  const OperatorButton = ({image, operator}) =>{
+  const OperatorButton = ({image, operator, placeholder}) =>{
     return(
-      <TouchableOpacity style = {[styles.NumButton, {backgroundColor: '#007B68'}]}>
+      <TouchableOpacity style = {[styles.NumButton, {backgroundColor: '#007B68'}]} onPress = {() => handlePress(operator, placeholder)}>
         <Image style={styles.operator} source={image}/>
       </TouchableOpacity>
     );
   }
+
+
   return (
     <View style={styles.container}>
       
     <View style = {styles.screen}>
 
       <View style = {styles.inputContainer}>
-        <Text style = {styles.input}>10+2+3+4+5+6+7+8+9+0</Text>
+        <Text style = {styles.input}>{input}</Text>
       </View>
       
       <View style = {styles.outputContainer}>
-        <Text style = {styles.output}>10000</Text>
+        <Text style = {styles.output}>{output}</Text>
       </View>
      
     </View>
 
     <View style = {styles.controlButtons}>
-      <TouchableOpacity style = {styles.controlButton}>
+      <TouchableOpacity style = {styles.controlButton} onPress = {() => {setInput(''); setEval('')}}>
         <Text style = {styles.number}>AC</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity style = {styles.controlButton}>
+      <TouchableOpacity style = {styles.controlButton} onPress = {() => {setInput(prev => prev.slice(0, prev.length-1)); setEval(prev =>  prev.slice(0, prev.length-1))}}>
         <Image style={styles.operator} source={require('./assets/backspace.png')}/>
       </TouchableOpacity>
     </View>
@@ -69,7 +90,7 @@ const App = () => {
       />
 
       <View style= {styles.bottomRow}>
-        <TouchableOpacity style = {styles.zero}>
+        <TouchableOpacity style = {styles.zero} onPress = {() => handlePress('0', '0')}>
           <Text style = {styles.number}>0</Text>
         </TouchableOpacity>
         <NumButton number = {'.'}/>
@@ -79,7 +100,7 @@ const App = () => {
       <View style = {styles.operatorKeys}>
         <FlatList
           data={operators}
-          renderItem = {({item}) => <OperatorButton image = {item.image} operator = {item.operator}/>}
+          renderItem = {({item}) => <OperatorButton image = {item.image} operator = {item.operator} placeholder = {item.placeholder}/>}
           keyExtractor={(item, index) => index}
         />
         <TouchableOpacity style = {[styles.NumButton, {backgroundColor: '#007B68'}]}>
